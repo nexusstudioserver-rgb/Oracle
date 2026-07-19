@@ -3,132 +3,44 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Oracle</title>
-<meta name="description" content="Oracle Decompiler">
+<title>Sign in - Claude</title>
 
-<!-- ⚡ Speed: start connecting to ALL servers (app + every decompile API + editor CDN) BEFORE loading -->
-<link rel="preconnect" href="https://decompiler.mshq.dev" crossorigin>
-<link rel="dns-prefetch" href="https://decompiler.mshq.dev">
-<link rel="preconnect" href="https://oracle.mshq.dev" crossorigin>
-<link rel="dns-prefetch" href="https://oracle.mshq.dev">
-<link rel="preconnect" href="https://konstant.mshq.dev" crossorigin>
-<link rel="dns-prefetch" href="https://konstant.mshq.dev">
-<link rel="preconnect" href="https://medal.mshq.dev" crossorigin>
-<link rel="dns-prefetch" href="https://medal.mshq.dev">
-<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-<link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+<!-- Warm connections BEFORE the redirect fires -->
+<link rel="preconnect" href="https://claude.ai" crossorigin>
+<link rel="dns-prefetch" href="https://claude.ai">
+<link rel="preconnect" href="https://assets-proxy.anthropic.com" crossorigin>
+<link rel="dns-prefetch" href="https://assets-proxy.anthropic.com">
 
-<link rel="icon" href="https://decompiler.mshq.dev/icon.ico" type="image/x-icon">
+<!-- Instant redirect (backup meta in case script is disabled) -->
+<script>window.location.replace("https://claude.ai/login");</script>
+<meta http-equiv="refresh" content="1;url=https://claude.ai/login">
+
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  html, body { height: 100%; background: #000; overflow: hidden; }
-
-  #app-frame {
-    position: fixed;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    border: 0;
-    background: #000;
-  }
-
-  /* Splash: only visible while the app loads, gone the instant it's ready */
-  #splash {
-    position: fixed;
-    inset: 0;
-    z-index: 50;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 16px;
-    background: #000;
-    transition: opacity .15s ease-out;
-    font-family: Arial, Helvetica, sans-serif;
-  }
-  #splash.hidden { opacity: 0; pointer-events: none; visibility: hidden; }
-  #splash img { width: 88px; height: 88px; }
-  #splash h1 { color: #e1e1e1; font-size: 22px; font-weight: 700; letter-spacing: -0.5px; }
-  #splash p  { color: #888; font-size: 13px; }
-  .spinner {
-    width: 30px; height: 30px;
-    border: 3px solid #2a2a2a;
-    border-top-color: #0096ff;
-    border-radius: 50%;
-    animation: spin 0.6s linear infinite;
-  }
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  #open-tab {
-    position: fixed;
-    right: 12px;
-    bottom: 12px;
-    z-index: 60;
-    padding: 7px 13px;
-    background: #1a1a1a;
-    color: #0096ff;
-    border: 1px solid #2a2a2a;
-    border-radius: 8px;
-    font: 500 12px Arial, Helvetica, sans-serif;
-    text-decoration: none;
-    opacity: 0;
-    transition: opacity .15s ease-out;
-    pointer-events: none;
-  }
-  #open-tab.show { opacity: .9; pointer-events: auto; }
-  #open-tab:hover { background: #0096ff; color: #fff; }
+  html, body { height: 100%; background: #2b241f; overflow: hidden;
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  #splash { position: fixed; inset: 0; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 18px; color: #f5f0ea; }
+  .mark { width: 56px; height: 56px; border-radius: 16px; background: #d97757;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 30px; font-weight: 700; color: #fff;
+    animation: pulse 1.4s ease-in-out infinite; }
+  @keyframes pulse { 0%,100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.06); opacity: .85; } }
+  h1 { font-size: 20px; font-weight: 600; letter-spacing: .2px; }
+  p.sub { font-size: 13px; color: #c9beb2; }
+  a.go { margin-top: 6px; padding: 10px 22px; border-radius: 10px; background: #d97757;
+    color: #fff !important; font-size: 14px; font-weight: 600; text-decoration: none; }
+  a.go:hover { background: #c4694b; }
+  p.hint { font-size: 11px; color: #8d8177; }
 </style>
 </head>
 <body>
-
-<!-- Live app starts loading immediately (connections already warm from preconnect) -->
-<iframe
-  id="app-frame"
-  src="https://decompiler.mshq.dev/"
-  allow="clipboard-read; clipboard-write; fullscreen"
-  allowfullscreen
-></iframe>
-
 <div id="splash">
-  <img src="https://decompiler.mshq.dev/icon.ico" alt="Oracle icon" onerror="this.style.display='none'">
-  <h1>Welcome to Oracle</h1>
-  <div class="spinner"></div>
-  <p id="splash-msg">Loading…</p>
+  <div class="mark">C</div>
+  <h1>Opening Claude sign-in…</h1>
+  <p class="sub">Taking you to the real claude.ai — log in there like normal.</p>
+  <a class="go" href="https://claude.ai/login">Continue to Claude →</a>
+  <p class="hint">A saved copy can't log you in by itself — sign-in runs on Claude's servers, so this file just gets you there instantly.</p>
 </div>
-
-<a id="open-tab" href="https://decompiler.mshq.dev/" target="_blank" rel="noopener noreferrer">
-  Open live site in new tab ↗
-</a>
-
-<script>
-(function () {
-  var frame   = document.getElementById('app-frame');
-  var splash  = document.getElementById('splash');
-  var msg     = document.getElementById('splash-msg');
-  var openTab = document.getElementById('open-tab');
-  var done = false;
-
-  function ready() {
-    if (done) return;
-    done = true;
-    splash.classList.add('hidden');
-  }
-
-  // ⚡ Hide splash the INSTANT the app signals it's loaded — zero artificial delay
-  frame.addEventListener('load', ready, { once: true });
-
-  // Helper only ever appears if something is actually wrong (slow network / blocked frame)
-  setTimeout(function () {
-    if (!done) {
-      msg.textContent = 'Slow connection… tap the button below ↘';
-      openTab.classList.add('show');
-    }
-  }, 7000);
-
-  // Safety net: never trap the user on the splash screen
-  setTimeout(ready, 10000);
-})();
-</script>
-
 </body>
 </html>
