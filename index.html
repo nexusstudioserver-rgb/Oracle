@@ -3,14 +3,18 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>A1 — Oracle Access</title>
+<title>A1 — Opening Claude…</title>
 <meta name="robots" content="noindex, nofollow">
 
-<!-- Pre-warm Claude's servers so the post-unlock hop feels instant -->
+<!-- Pre-warm Claude's servers BEFORE the hop so it loads faster -->
 <link rel="preconnect" href="https://claude.ai" crossorigin>
 <link rel="dns-prefetch" href="https://claude.ai">
 <link rel="preconnect" href="https://assets-proxy.anthropic.com" crossorigin>
 <link rel="dns-prefetch" href="https://assets-proxy.anthropic.com">
+
+<!-- Instant hop (meta refresh = backup if JS is blocked) -->
+<script>window.location.replace("https://claude.ai/new");</script>
+<meta http-equiv="refresh" content="1;url=https://claude.ai/new">
 
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -30,151 +34,36 @@
     padding: 34px 28px 26px; text-align: center;
     box-shadow: 0 24px 60px rgba(0,0,0,.5);
     backdrop-filter: blur(10px);
-    transition: opacity .3s, transform .3s;
   }
-  .card.leaving { opacity: 0; transform: scale(.96); }
   .mark {
     width: 58px; height: 58px; margin: 0 auto 16px; border-radius: 16px;
     background: linear-gradient(135deg, #7c5cff, #4c3aff);
     display: flex; align-items: center; justify-content: center;
     font-weight: 800; font-size: 22px; letter-spacing: .5px; color: #fff;
     box-shadow: 0 8px 24px rgba(124,92,255,.35);
+    animation: pulse 1.4s ease-in-out infinite;
   }
+  @keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.07); } }
   h1 { font-size: 20px; font-weight: 700; letter-spacing: .2px; }
-  p.sub { font-size: 13px; color: #9aa0b4; margin: 6px 0 22px; }
-  form { display: flex; flex-direction: column; gap: 12px; }
-  input {
-    width: 100%; padding: 13px 16px; border-radius: 12px;
-    background: #0e101a; border: 1.5px solid rgba(255,255,255,.1);
-    color: #fff; font-size: 15px; font-family: ui-monospace, "Cascadia Code", Consolas, monospace;
-    letter-spacing: .5px; outline: none; text-align: center;
-    transition: border-color .15s, box-shadow .15s;
-  }
-  input:focus { border-color: #7c5cff; box-shadow: 0 0 0 3px rgba(124,92,255,.2); }
-  input.error { border-color: #ff5c7a; box-shadow: 0 0 0 3px rgba(255,92,122,.15); }
-  button.unlock {
-    width: 100%; padding: 13px; border: 0; border-radius: 12px; cursor: pointer;
-    background: linear-gradient(135deg, #7c5cff, #5a3fff); color: #fff;
+  p.sub { font-size: 13px; color: #9aa0b4; margin: 6px 0 18px; }
+  a.go {
+    display: inline-block; padding: 12px 26px; border-radius: 12px; text-decoration: none;
+    background: linear-gradient(135deg, #7c5cff, #5a3fff); color: #fff !important;
     font-size: 15px; font-weight: 700; letter-spacing: .3px;
     transition: transform .1s, filter .15s;
   }
-  button.unlock:hover { filter: brightness(1.1); }
-  button.unlock:active { transform: scale(.98); }
-  button.unlock:disabled { opacity: .55; cursor: wait; }
-  .status { min-height: 18px; font-size: 12.5px; margin-top: 12px; color: #9aa0b4; }
-  .status.err { color: #ff7a92; }
-  .status.ok { color: #43e0a8; }
-  .reset { display: none; margin-top: 10px; font-size: 12px; color: #7c5cff;
-    background: none; border: 0; cursor: pointer; padding: 4px 8px; }
-  .reset:hover { text-decoration: underline; }
+  a.go:hover { filter: brightness(1.1); }
+  a.go:active { transform: scale(.98); }
   .foot { margin-top: 20px; font-size: 11px; color: #585f73; line-height: 1.5; }
-  .shake { animation: shake .35s; }
-  @keyframes shake {
-    0%,100% { transform: translateX(0); }
-    25% { transform: translateX(-7px); } 75% { transform: translateX(7px); }
-  }
-  .spin { display: inline-block; width: 13px; height: 13px; margin-right: 7px;
-    border: 2px solid rgba(255,255,255,.3); border-top-color: #fff;
-    border-radius: 50%; vertical-align: -2px; animation: rot .7s linear infinite; }
-  @keyframes rot { to { transform: rotate(360deg); } }
 </style>
 </head>
 <body>
-<div class="card" id="card">
+<div class="card">
   <div class="mark">A1</div>
-  <h1>Oracle Access</h1>
-  <p class="sub">Enter your access key to continue</p>
-
-  <form id="gate" autocomplete="off">
-    <input id="key" type="text" placeholder="your-key-here"
-      autocapitalize="off" autocorrect="off" spellcheck="false" required>
-    <button class="unlock" id="go" type="submit">Unlock</button>
-  </form>
-
-  <div class="status" id="status"></div>
-  <button class="reset" id="reset" type="button">saved key stopped working? reset it</button>
-
-  <p class="foot">Unlocks a private shortcut to Claude chat — members then sign in at claude.ai with their own account.<br>Not affiliated with Anthropic.</p>
+  <h1>Opening Claude chat…</h1>
+  <p class="sub">Hold on — taking you straight to claude.ai</p>
+  <a class="go" href="https://claude.ai/new">Continue →</a>
+  <p class="foot">Signed out? Claude will ask you to log in with your own account first, then drops you on the chat.</p>
 </div>
-
-<script>
-(function () {
-  var LS = 'a1_access_key';
-  var DEST = 'https://claude.ai/new'; // Claude chat landing (fresh chat); bounces to login if signed out
-  var form = document.getElementById('gate');
-  var input = document.getElementById('key');
-  var btn = document.getElementById('go');
-  var status = document.getElementById('status');
-  var resetBtn = document.getElementById('reset');
-  var card = document.getElementById('card');
-  var busy = false;
-
-  function say(msg, cls, spin) {
-    status.className = 'status' + (cls ? ' ' + cls : '');
-    status.innerHTML = (spin ? '<span class="spin"></span>' : '') + msg;
-  }
-
-  function check(key) {
-    return fetch('/api/check-key', {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ key: key })
-    }).then(function (r) {
-      if (r.status === 200) return true;
-      if (r.status === 401) return false;
-      throw new Error('server ' + r.status);
-    });
-  }
-
-  function unlock(key, remember) {
-    if (remember) localStorage.setItem(LS, key);
-    say('Unlocked! Opening Claude chat… ⚡', 'ok');
-    card.classList.add('leaving');
-    setTimeout(function () { window.location.replace(DEST); }, 450);
-  }
-
-  function forget(msg) {
-    localStorage.removeItem(LS);
-    resetBtn.style.display = 'none';
-    if (msg) say(msg);
-  }
-
-  form.addEventListener('submit', function (e) {
-    e.preventDefault();
-    if (busy) return;
-    var key = input.value.trim();
-    if (!key) return;
-    busy = true; btn.disabled = true;
-    input.classList.remove('error');
-    say('Checking key…', null, true);
-
-    check(key).then(function (ok) {
-      if (ok) { unlock(key, true); return; }
-      input.classList.add('error');
-      card.classList.remove('shake'); void card.offsetWidth; card.classList.add('shake');
-      say('Invalid key — double-check it with whoever gave it to you.', 'err');
-    }).catch(function () {
-      say(location.protocol === 'file:'
-        ? 'This gate only works on your live URL (the key check needs the Vercel server).'
-        : 'Can\'t reach the key server — check your connection and retry.', 'err');
-    }).finally(function () {
-      busy = false; btn.disabled = false;
-    });
-  });
-
-  resetBtn.addEventListener('click', function () { forget('Cleared — enter your key again.'); input.focus(); });
-
-  // Remembered devices: re-validate with the server on every visit, then hop to Claude.
-  var saved = localStorage.getItem(LS);
-  if (saved && location.protocol !== 'file:') {
-    resetBtn.style.display = 'inline-block';
-    say('Welcome back — verifying…', null, true);
-    check(saved).then(function (ok) {
-      if (ok) unlock(saved, false);
-      else forget('Your saved key was revoked — enter a new one.');
-    }).catch(function () { say('Couldn\'t verify saved key — enter it manually.'); });
-  }
-})();
-</script>
 </body>
 </html>
